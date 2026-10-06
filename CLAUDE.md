@@ -77,12 +77,12 @@ docs/            documentación y hallazgos
 - [x] **Paso 2:** crear el repositorio `colombia-seguridad-pipeline` en GitHub y clonarlo.
 - [x] **Paso 3:** crear la estructura de carpetas y ajustar `.gitignore`.
 - [x] **Paso 4:** crear el entorno virtual `.venv`, instalar paquetes y generar `requirements.txt`.
-- [ ] **Paso 5:** descargar el archivo de delitos a nivel de registro **2025** y guardarlo como `data/raw/delitos_2025.xlsx` (sin tildes ni espacios).
-- [ ] **Paso 6:** crear `notebooks/01_exploracion.ipynb` y explorar el archivo: hojas, forma (`shape`), tipos (`dtypes`), primeras filas, nulos y valores distintos de las columnas categóricas. Si el encabezado no está en la primera fila, usar `header=N`. Guardar una copia en `data/interim/delitos_2025.csv`.
-- [ ] **Paso 7:** escribir `docs/hallazgos_dia1.md`: filas y columnas, significado de cada columna, nulos, nombres inconsistentes de municipios o delitos, y rango de fechas.
+- [x] **Paso 5:** descargar el archivo de delitos a nivel de registro **2025** y guardarlo como `data/raw/delitos_2025.xlsx` (sin tildes ni espacios).
+- [x] **Paso 6:** crear `notebooks/01_exploracion.ipynb` y explorar el archivo: hojas, forma (`shape`), tipos (`dtypes`), primeras filas, nulos y valores distintos de las columnas categóricas. Si el encabezado no está en la primera fila, usar `header=N`. Guardar una copia en `data/interim/delitos_2025.csv`.
+- [x] **Paso 7:** escribir `docs/hallazgos_dia1.md`: filas y columnas, significado de cada columna, nulos, nombres inconsistentes de municipios o delitos, y rango de fechas.
 - [ ] **Paso 8:** `git add .`, `git commit` y `git push`.
 
-**Estamos en:** empezar el **paso 5**.
+**Estamos en:** el **paso 8** (commit y push). Pasos 5, 6 y 7 hechos; ver `docs/hallazgos_dia1.md`.
 
 ## Plan de los siguientes días
 - **Día 2:** documentar problemas de calidad de datos y decidir cómo tratarlos.
