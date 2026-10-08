@@ -5,6 +5,7 @@ import pandas as pd
 RAIZ = Path(__file__).resolve().parent.parent
 RUTA_ENTRADA = RAIZ / "data" / "raw" / "delitos_2025.xlsx"
 RUTA_SALIDA = RAIZ / "data" / "interim" / "delitos_2025_limpio.csv"
+RUTA_DIVIPOLA = RAIZ / "data" / "raw" / "divipola.csv"
 
 # Columnas que son códigos: se leen como texto para no perder los ceros iniciales
 COLUMNAS_TEXTO = {"MES": str, "CODIGO DANE": str, "ICCS": str}
@@ -50,11 +51,27 @@ def rellenar_no_reportado(df):
     return df
 
 
+def agregar_divipola(df, ruta=RUTA_DIVIPOLA):
+    """Agrega los nombres oficiales y el tipo de unidad del DANE, uniendo por código DIVIPOLA."""
+    divipola = pd.read_csv(ruta, dtype=str)
+    divipola = divipola[["cod_mpio", "nom_mpio", "dpto", "tipo_municipio"]]
+    divipola = divipola.rename(
+        columns={
+            "nom_mpio": "municipio_oficial",
+            "dpto": "departamento_oficial",
+            "tipo_municipio": "tipo_unidad",
+        }
+    )
+    df = df.merge(divipola, how="left", left_on="codigo_dane", right_on="cod_mpio")
+    return df.drop(columns=["cod_mpio"])
+
+
 def main():
     df = leer_crudo(RUTA_ENTRADA)
     df = quitar_notas(df)
     df = estandarizar(df)
     df = rellenar_no_reportado(df)
+    df = agregar_divipola(df)
     df.to_csv(RUTA_SALIDA, index=False, encoding="utf-8-sig")
     print(f"Guardado: {RUTA_SALIDA} ({len(df):,} filas)")
 

@@ -59,9 +59,14 @@ Del **2025-01-01** al **2025-12-31**. Ninguna fecha inválida, y la columna `MES
    - **Comprobado:** cada código DANE pertenece a un solo nombre y a un solo departamento (0 excepciones).
    - **Decisión:** el municipio se identifica **siempre por `CODIGO DANE`**, nunca por nombre.
 6. **Un mismo municipio con varios códigos.** Aun combinando departamento y municipio, hay dos casos con más de un código: `Leticia` (Amazonas) con 7 códigos e `Inírida` (Guainía) con 2.
-   - **Hipótesis (pendiente de verificar con el catálogo DIVIPOLA del DANE):** los códigos adicionales corresponden a áreas no municipalizadas, que la Policía registra bajo el nombre de la capital.
+   - **Confirmado con el catálogo DIVIPOLA** (`data/raw/divipola.csv`, datos.gov.co): los códigos adicionales de Leticia son **áreas no municipalizadas** de Amazonas (El Encanto, La Chorrera, La Pedrera, Miriti-Paraná, Puerto Santander y Tarapacá, 23 registros en total) que la Policía registra bajo el nombre de la capital.
+   - En Inírida, el código `94663` (1 registro) **no existe en el catálogo DIVIPOLA**. Queda sin resolver.
+   - **Decisión:** el nombre del municipio se tomará del catálogo oficial, según el `codigo_dane`.
 7. **7 registros sin municipio** (código `52000`, de departamento completo). Se conservarán para los totales por departamento, pero no se pueden ubicar en un municipio.
-8. **Nombres de departamento inconsistentes:** `BOGOTA` sin tilde frente a `ATLÁNTICO`, `BOYACÁ`, etc., y nombres abreviados como `VALLE`, `GUAJIRA` y `SAN ANDRÉS`. Se normalizarán con el catálogo DIVIPOLA.
+8. **Nombres de departamento y municipio inconsistentes con el catálogo oficial.**
+   - Departamentos: `BOGOTA` (oficial `BOGOTÁ, D.C.`), `VALLE` (`VALLE DEL CAUCA`), `GUAJIRA` (`LA GUAJIRA`) y `SAN ANDRÉS` (`ARCHIPIÉLAGO DE SAN ANDRÉS, PROVIDENCIA Y SANTA CATALINA`).
+   - Municipios: 60 códigos tienen un nombre distinto al oficial, casi siempre por tildes o ñ faltantes (`Itagui` / `ITAGÜÍ`, `Sonson` / `SONSÓN`) o por abreviaturas (`Cartagena` / `CARTAGENA DE INDIAS`, `Mompós` / `SANTA CRUZ DE MOMPOX`).
+   - **Decisión:** se usarán los nombres oficiales del DIVIPOLA, unidos por `codigo_dane`.
 9. **Filas idénticas: no son duplicados.** Hay 413.113 filas exactamente iguales a otra, pero como cada fila es un caso (`CANTIDAD` = 1), dos casos con la misma fecha, lugar, arma y víctima son sucesos distintos.
    - **Decisión:** **no se eliminan**. Borrarlas reduciría el total de delitos en más de la mitad.
 
