@@ -70,6 +70,7 @@ psutil==7.2.2
 pure_eval==0.2.4
 pycparser==3.0
 Pygments==2.21.0
+pyodbc==5.3.0
 python-dateutil==2.9.0.post0
 python-json-logger==4.2.0
 pywinpty==3.0.5
@@ -84,6 +85,7 @@ rpds-py==2026.6.3
 Send2Trash==2.1.0
 six==1.17.0
 soupsieve==2.10
+SQLAlchemy==2.1.4
 stack-data==0.6.3
 terminado==0.18.1
 tinycss2==1.5.1

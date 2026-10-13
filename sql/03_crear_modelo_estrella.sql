@@ -3,7 +3,7 @@
 USE ColombiaSeguridad;
 GO
 
--- Dimensi髇 de fechas: una fila por d韆. La llave es la fecha escrita como n鷐ero AAAAMMDD.
+-- Dimensi贸n de fechas: una fila por d铆a. La llave es la fecha escrita como n煤mero AAAAMMDD.
 CREATE TABLE dw.dim_fecha (
     fecha_key          INT           NOT NULL PRIMARY KEY,
     fecha              DATE          NOT NULL UNIQUE,
@@ -18,7 +18,7 @@ CREATE TABLE dw.dim_fecha (
 );
 GO
 
--- Dimensi髇 de ubicaci髇: una fila por c骴igo DANE.
+-- Dimensi贸n de ubicaci贸n: una fila por c贸digo DANE.
 CREATE TABLE dw.dim_ubicacion (
     ubicacion_key  INT IDENTITY(1,1) PRIMARY KEY,
     codigo_dane    CHAR(5)        NOT NULL UNIQUE,
@@ -28,7 +28,7 @@ CREATE TABLE dw.dim_ubicacion (
 );
 GO
 
--- Dimensi髇 de delitos: una fila por c骴igo ICCS.
+-- Dimensi贸n de delitos: una fila por c贸digo ICCS.
 CREATE TABLE dw.dim_delito (
     delito_key  INT IDENTITY(1,1) PRIMARY KEY,
     iccs        VARCHAR(6)     NOT NULL UNIQUE,
@@ -36,14 +36,14 @@ CREATE TABLE dw.dim_delito (
 );
 GO
 
--- Dimensi髇 de modalidad: una fila por arma o medio empleado.
+-- Dimensi贸n de modalidad: una fila por arma o medio empleado.
 CREATE TABLE dw.dim_modalidad (
     modalidad_key  INT IDENTITY(1,1) PRIMARY KEY,
     arma_medio     NVARCHAR(60)  NOT NULL UNIQUE
 );
 GO
 
--- Dimensi髇 de v韈tima: una fila por combinaci髇 de g閚ero y grupo de edad.
+-- Dimensi贸n de v铆ctima: una fila por combinaci贸n de g茅nero y grupo de edad.
 CREATE TABLE dw.dim_victima (
     victima_key  INT IDENTITY(1,1) PRIMARY KEY,
     genero       NVARCHAR(20)  NOT NULL,
@@ -52,8 +52,8 @@ CREATE TABLE dw.dim_victima (
 );
 GO
 
--- Tabla de hechos. Grano: una fila por fecha + ubicaci髇 + delito + modalidad + v韈tima.
--- 'cantidad' es el n鷐ero de casos registrados con esa combinaci髇.
+-- Tabla de hechos. Grano: una fila por fecha + ubicaci贸n + delito + modalidad + v铆ctima.
+-- 'cantidad' es el n煤mero de casos registrados con esa combinaci贸n.
 CREATE TABLE dw.fact_delitos (
     fecha_key       INT  NOT NULL,
     ubicacion_key   INT  NOT NULL,
