@@ -60,7 +60,7 @@ Del **2025-01-01** al **2025-12-31**. Ninguna fecha inválida, y la columna `MES
    - **Decisión:** el municipio se identifica **siempre por `CODIGO DANE`**, nunca por nombre.
 6. **Un mismo municipio con varios códigos.** Aun combinando departamento y municipio, hay dos casos con más de un código: `Leticia` (Amazonas) con 7 códigos e `Inírida` (Guainía) con 2.
    - **Confirmado con el catálogo DIVIPOLA** (`data/raw/divipola.csv`, datos.gov.co): los códigos adicionales de Leticia son **áreas no municipalizadas** de Amazonas (El Encanto, La Chorrera, La Pedrera, Miriti-Paraná, Puerto Santander y Tarapacá, 23 registros en total) que la Policía registra bajo el nombre de la capital.
-   - En Inírida, el código `94663` (1 registro) **no existe en el catálogo DIVIPOLA**. Queda sin resolver.
+   - En Guainía, el código `94663` (1 registro) **no existe en el catálogo DIVIPOLA**. Según el archivo de población del DANE corresponde a **Mapiripana**, pero la Policía lo registró con el nombre **Inírida**, cuyo código real es `94001`. Es probable un error de captura, pero no se puede confirmar. Se conserva con el nombre de la Policía y `tipo_unidad = 'Sin clasificar'`.
    - **Decisión:** el nombre del municipio se tomará del catálogo oficial, según el `codigo_dane`.
 7. **7 registros sin municipio** (código `52000`, de departamento completo). Se conservarán para los totales por departamento, pero no se pueden ubicar en un municipio.
 8. **Nombres de departamento y municipio inconsistentes con el catálogo oficial.**
@@ -78,13 +78,26 @@ Los 18 delitos tienen un código ICCS único, y el código coincide con el que a
 
 | Pregunta | ¿Se puede responder? |
 |---|---|
-| 1. Evolución por año y mes; tasa por 100.000 habitantes | **Sí** para el mes de 2025. Para evolución anual y tasas faltan otros años y la población del DANE. |
+| 1. Evolución por año y mes; tasa por 100.000 habitantes | **Sí** para 2025, por mes y con tasa (la población del DANE ya está en el modelo). La evolución anual necesita otros años. |
 | 2. Días de la semana y **horas** | **Parcial.** Hay fecha, por lo que se puede ver el día de la semana, pero **no hay columna de hora**. |
 | 3. Modalidades o armas por delito | **Sí**, con `ARMAS MEDIOS` y `DELITOS`. |
 | 4. Municipios que empeoraron o mejoraron | **Todavía no.** Requiere el archivo de 2024, cuyo formato puede ser distinto. |
 
-## 8. Próximos pasos
+## 8. Población del DANE
 
-- Día 2: decidir el tratamiento definitivo de los problemas anteriores.
-- Descargar el catálogo DIVIPOLA y las proyecciones de población del DANE.
-- Revisar el archivo de 2024 y comparar su formato.
+Fuente: proyecciones de población municipal 2018-2042, por área (`data/raw/poblacion_dane_2018_2042.xlsx`, publicada el 8 de agosto de 2025).
+
+1. **Estructura del archivo.** Tiene 3 hojas (portada, notas y datos). En la hoja de datos el encabezado está en el índice 7 y hay notas al final.
+2. **Tres filas por municipio y año** (cabecera, centros poblados y rural disperso, y total). La fila `Total` ya incluye las otras dos.
+   - **Decisión:** usar solo `Total`. Sumar las tres contaría la población dos veces (el total de Colombia en 2025 saldría por encima de 106 millones, en vez de 53.057.212).
+3. **Cobertura:** 1.123 territorios × 25 años = 28.075 filas, sin duplicados. De los 1.110 códigos de los delitos, solo `52000` (7 registros) no tiene población.
+4. **Territorios con 0 habitantes:** `94663` (Mapiripana) desde 2020, porque desde diciembre de 2019 el DANE lo cuenta dentro del nuevo municipio de Barrancominas (`94343`); y `27493` (Nuevo Belén de Bajirá) entre 2018 y 2023, antes de su creación.
+   - **Decisión:** los ceros se conservan, porque son información real del DANE. Al calcular la tasa se usa `NULLIF(habitantes, 0)` para evitar la división entre cero.
+5. **14 territorios con población y sin ningún delito registrado en 2025:** 2 municipios (Nuevo Belén de Bajirá y Barrancominas) y 12 áreas no municipalizadas.
+   - **Decisión:** la dimensión de ubicación se construye desde el catálogo DIVIPOLA completo y no desde los delitos. Así esos territorios aparecen en el dashboard con tasa 0 en vez de desaparecer.
+
+## 9. Próximos pasos
+
+- Calcular la tasa por 100.000 habitantes y conectar Power BI al modelo.
+- Revisar el archivo de 2024 y comparar su formato, para la pregunta de municipios que mejoraron o empeoraron.
+- Evaluar los "cuadros de salida" de la Policía como fuente validada de género y edad.
